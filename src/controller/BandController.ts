@@ -21,4 +21,19 @@ export class BandController {
             res.status(400).send(error.message);
         }
     }
+
+    getBandById = async(req:Request, res:Response) => {
+        try {
+            const {id} = req.params
+            const result = await new BandBusiness()
+            .getBandById(id)
+            res
+            .status(200)
+            .send({
+                result
+            })
+        } catch (error:any) {
+            res.status(400).send(error.message);
+        }
+    }
 }
