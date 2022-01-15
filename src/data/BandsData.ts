@@ -24,5 +24,17 @@ export class BandsData {
                 throw new Error(error.slqMessage || error.message)
             }
     }
+
+    public selectBandByName = async(name:string):Promise<Band> => {
+        try {
+            const isBandExists = await connection("nome_tabela_bandas")
+            .select("*")
+            .where({name})
+            return isBandExists[0]
+            
+        } catch (error:any) {
+            throw new Error(error.slqMessage || error.message)
+        }
+    }
     
 }

@@ -1,5 +1,5 @@
 import { BandsData } from "../data/BandsData";
-import { BandInput } from "../model/band";
+import { BandInput, Band } from "../model/band";
 import { generateId } from "../services/IdGenerator"
 
 export class BandBusiness{
@@ -12,7 +12,11 @@ export class BandBusiness{
             ){
                 throw new Error("Prencha os campos corretamente!")
             }
+            const isBandExists:Band = await new BandsData().selectBandByName(band.name)
 
+            if(isBandExists) {
+              throw new Error("Nome de banda já cadastrado!")
+            }  
             const id: string = generateId()
             await new BandsData().insertBand({
                 id,
@@ -22,6 +26,22 @@ export class BandBusiness{
             })
         const message = "Banda Cadastrada com Sucesso!"
             return message
+
+      } catch (error:any) {
+        throw new Error(error.message);
+      }
+    }
+
+    getBandById = async(id:string):Promise<Band> => {
+      try {
+        if(
+          !id 
+        ){
+          throw new Error("Prencha o ID da Banda")
+        }
+        const getBand:Band = await new BandsData().selectBandById(id)
+        return getBand
+        
       } catch (error:any) {
         throw new Error(error.message);
       }
