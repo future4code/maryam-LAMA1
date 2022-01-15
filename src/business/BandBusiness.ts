@@ -1,10 +1,19 @@
 import { BandsData } from "../data/BandsData";
-import { BandInput, Band } from "../model/band";
+import { Band, BandInput } from "../model/band";
+import { USER_ROLE } from "../model/User";
+import { Authenticator } from "../services/Authenticator";
 import { generateId } from "../services/IdGenerator"
 
 export class BandBusiness{
-    signUpBusiness = async (band:BandInput): Promise<string> => {
+
+
+    signUpBusiness = async (band:BandInput, token:string): Promise<string> => {
       try {
+
+        const tokenData = new Authenticator().getData(token)
+        if(tokenData.role !== USER_ROLE.ADMIN){
+              throw new Error("Usuário não permitido!")
+        }
         if (
             !band.name ||
             !band.music_genre ||

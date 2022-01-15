@@ -1,17 +1,20 @@
 import { Request, Response } from "express";
 import { BandBusiness} from "../business/BandBusiness"
+import { BandInput } from "../model/band";
 
 export class BandController {
     signUpController = async (req: Request, res: Response) => {
         try {
+            const token = req.headers.authorization as string
             const {name, music_genre, responsible} = req.body
-
-            const result = await new BandBusiness()
-            .signUpBusiness({
+            const input:BandInput = {
                 name,
                 music_genre,
                 responsible
-            })
+            }
+
+            const result = await new BandBusiness()
+            .signUpBusiness(input, token)
             res
             .status(201)
             .send({
