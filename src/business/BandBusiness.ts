@@ -24,7 +24,7 @@ export class BandBusiness{
                 music_genre: band.music_genre,
                 responsible:band.responsible
             })
-        const message = "Banda Cadastrada com Sucesso!"
+            const message = "Banda Cadastrada com Sucesso!"
             return message
 
       } catch (error:any) {

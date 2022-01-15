@@ -24,7 +24,7 @@ const createTables = async () => {
         FOREIGN KEY(band_id) REFERENCES nome_tabela_bandas(id)
     );
 
-    CREATE TABLE IF NOT EXISTS nome_tabela_usuários (
+    CREATE TABLE IF NOT EXISTS nome_tabela_usuarios (
         id VARCHAR(255) PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
