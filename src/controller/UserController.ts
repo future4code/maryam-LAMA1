@@ -1,50 +1,41 @@
 import { Request, Response } from "express";
-import { UserInputDTO, LoginInputDTO} from "../model/user";
 import { UserBusiness } from "../business/UserBusiness";
-import { BaseDatabase } from "../data/BaseDatabase";
+import { UserData } from "../data/UserData";
 
 export class UserController {
-    async signup(req: Request, res: Response) {
+    signUpController = async(req: Request, res: Response) => {
         try {
+            const {name, email, password, role} = req.body
 
-            const input: UserInputDTO = {
-                email: req.body.email,
-                name: req.body.name,
-                password: req.body.password,
-                role: req.body.role
-            }
-
-            const userBusiness = new UserBusiness();
-            const token = await userBusiness.createUser(input);
-
-            res.status(200).send({ token });
-
-        } catch (error) {
+            const result = await new UserBusiness()
+            .signUpBusiness({
+                name,
+                email,
+                password,
+                role
+            })
+            res
+            .status(201)
+            .send({
+                message:result
+            })
+        } catch (error:any) {
             res.status(400).send({ error: error.message });
         }
-
-        await BaseDatabase.destroyConnection();
     }
 
-    async login(req: Request, res: Response) {
-
+    login = async(req: Request, res: Response) => {
         try {
+            const {email, password} = req.body
 
-            const loginData: LoginInputDTO = {
-                email: req.body.email,
-                password: req.body.password
-            };
-
-            const userBusiness = new UserBusiness();
-            const token = await userBusiness.getUserByEmail(loginData);
-
-            res.status(200).send({ token });
-
-        } catch (error) {
+            const token = await new UserBusiness()
+            .getUserByEmail({email, password})
+            res
+            .status(200)
+            .send({token})
+        } catch (error:any) {
             res.status(400).send({ error: error.message });
         }
-
-        await BaseDatabase.destroyConnection();
     }
 
 }

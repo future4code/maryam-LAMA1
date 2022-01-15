@@ -1,43 +1,71 @@
-import { UserInputDTO, LoginInputDTO } from "../model/user";
-import { UserDatabase } from "../data/UserDatabase";
-import { IdGenerator } from "../services/IdGenerator";
 import { HashManager } from "../services/HashManager";
 import { Authenticator } from "../services/Authenticator";
+import { generateId } from "../services/IdGenerator";
+import { UserData } from "../data/UserData";
+import { UserInput, UserLogin } from "../model/User";
 
 export class UserBusiness {
 
-    async createUser(user: UserInputDTO) {
+    signUpBusiness = async(user:UserInput)=> {
+        try {
+            if(
+                !user.name ||
+                !user.email ||
+                !user.password ||
+                !user.role
+            ){
+                throw new Error("Prencha os campos corretamente!")
+            }
+        const id: string = generateId()
 
-        const idGenerator = new IdGenerator();
-        const id = idGenerator.generate();
+        const hashPassword = await new HashManager().hash(user.password)
+        
+        await new UserData().insertUser({
+            id,
+            name:user.name,
+            email:user.email,
+            password:hashPassword,
+            role:user.role
+        })
 
-        const hashManager = new HashManager();
-        const hashPassword = await hashManager.hash(user.password);
+        const accessToken = new Authenticator().generateToken({
+            id,
+            role: user.role
+        })
+        return accessToken
 
-        const userDatabase = new UserDatabase();
-        await userDatabase.createUser(id, user.email, user.name, hashPassword, user.role);
-
-        const authenticator = new Authenticator();
-        const accessToken = authenticator.generateToken({ id, role: user.role });
-
-        return accessToken;
-    }
-
-    async getUserByEmail(user: LoginInputDTO) {
-
-        const userDatabase = new UserDatabase();
-        const userFromDB = await userDatabase.getUserByEmail(user.email);
-
-        const hashManager = new HashManager();
-        const hashCompare = await hashManager.compare(user.password, userFromDB.getPassword());
-
-        const authenticator = new Authenticator();
-        const accessToken = authenticator.generateToken({ id: userFromDB.getId(), role: userFromDB.getRole() });
-
-        if (!hashCompare) {
-            throw new Error("Invalid Password!");
+        } catch (error:any) {
+            throw new Error(error.message);
         }
 
-        return accessToken;
     }
+
+    getUserByEmail = async(login:UserLogin) => {
+        try {
+            if(
+                !login.email ||
+                !login.password
+            ){
+                throw new Error("Prencha os campos corretamente!")
+            }
+            const userData = await new UserData().getUserByEmail(login.email)
+            if(!userData){
+                throw new Error("E-mail não encontrado!")
+            }
+
+            const hashCompare = await new HashManager().compare(login.password, userData.getPassword())
+            if(!hashCompare){
+                throw new Error("Senha inválida!")
+            }
+
+            const accessToken = new Authenticator().generateToken({
+                id:userData.getId(),
+                role:userData.getRole()
+            })
+            return accessToken
+        } catch (error:any) {
+            throw new Error(error.message);
+        }
+    }
+    
 }
