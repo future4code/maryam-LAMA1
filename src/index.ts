@@ -17,3 +17,4 @@ app.get("/band/:id", signUpBand.getBandById)// endpoint para buscar banda por ID
 
 
 app.post("/show", signUpShow.signUpController) // endpoint para cadastrar show (precisa arrumar as validações)
+app.get("/show/:day", signUpShow.getShows) // endpont para pegar shows pelo dia (está quase funcionando)
