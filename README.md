@@ -10,8 +10,8 @@
  <p>Projeto final de back-end feito em dupla durante o bootcamp fullstack web da <a href="https://www.labenu.com.br/" target="_blank">Labenu</a>. O LAMA (Labenu Musical Awards) é um festival com várias bandas famosas que foram convidadas para a formatura da turma Maryam! É possível realizar o cadastro de usuários, realizar login, cadastrar bandas, visualizar os detalhes sobre as bandas, adicionar um show a um dia e pegar todos os shows de uma data específica. 
 </p><br/>
  
- <h2> 📌ﾠDocumentação do Postman</h2>
- <p>- <a href="/" target="_blank">Breve</a></p><br/>
+ <h2> 📌ﾠ Postman</h2>
+ <p>- <a href="https://documenter.getpostman.com/view/17588768/UVXjLcG7" target="_blank">Documentação</a></p><br/>
  
  <h2> 🔗ﾠLink</h2>
  <p>- <a href="/" target="_blank">Breve</a></p><br/>
